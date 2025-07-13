@@ -25,14 +25,13 @@ func (d defaultVersion) Priority() int {
 }
 
 func (d defaultVersion) SelectVersion(versionList *spi.VersionList) (*semver.Version, string, error) {
-	versionType := "current default"
 	versionDefault := versionList.Default()
 	if versionDefault == nil {
-		return nil, versionType, fmt.Errorf("no default version set for channel group: %s", viper.GetString(config.Cluster.Channel))
+		return nil, d.String(), fmt.Errorf("no default version set for channel group: %s", viper.GetString(config.Cluster.Channel))
 	}
-	return versionDefault, versionType, nil
+	return versionDefault, d.String(), nil
 }
 
 func (d defaultVersion) String() string {
-	return "default"
+	return "current default"
 }

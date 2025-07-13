@@ -74,7 +74,7 @@ func (v *VersionSelector) setInstallVersion() (*semver.Version, string, error) {
 	versionType := "user supplied version"
 
 	clusterVersion := viper.GetString(config.Cluster.Version)
-	if len(clusterVersion) == 0 {
+	if clusterVersion == "" {
 		selectedVersion, versionType, err = v.getInstallVersion()
 		if err == nil && selectedVersion != nil {
 			if viper.GetBool(config.Cluster.EnoughVersionsForOldestOrMiddleTest) && viper.GetBool(config.Cluster.PreviousVersionFromDefaultFound) {

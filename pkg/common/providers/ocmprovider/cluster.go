@@ -548,20 +548,18 @@ func (o *OCMProvider) GenerateProperties() (map[string]string, error) {
 		username = user.Username
 	}
 
-	installedversion := viper.GetString(config.Cluster.Version)
-
-	provisionshardID := viper.GetString(config.Cluster.ProvisionShardID)
-
 	properties := map[string]string{
 		clusterproperties.JobName:          viper.GetString(config.JobName),
 		clusterproperties.JobID:            viper.GetString(config.JobID),
 		clusterproperties.MadeByOSDe2e:     "true",
 		clusterproperties.OwnedBy:          username,
-		clusterproperties.InstalledVersion: installedversion,
+		clusterproperties.InstalledVersion: viper.GetString(config.Cluster.Version),
 		clusterproperties.UpgradeVersion:   "--",
 		clusterproperties.Status:           clusterproperties.StatusProvisioning,
+		clusterproperties.CustomPayload:    viper.GetString(config.Cluster.CustomPayload),
 	}
 
+	provisionshardID := viper.GetString(config.Cluster.ProvisionShardID)
 	if provisionshardID != "" {
 		properties[clusterproperties.ProvisionShardID] = provisionshardID
 	}
@@ -571,17 +569,6 @@ func (o *OCMProvider) GenerateProperties() (map[string]string, error) {
 		for _, label := range strings.Split(additionalLabels, ",") {
 			properties[label] = "true"
 		}
-	}
-
-	jobName := viper.GetString(config.JobName)
-	jobID := viper.GetString(config.JobID)
-
-	if jobName != "" {
-		properties[clusterproperties.JobName] = jobName
-	}
-
-	if jobID != "" {
-		properties[clusterproperties.JobID] = jobID
 	}
 
 	return properties, nil

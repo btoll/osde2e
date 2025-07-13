@@ -30,29 +30,27 @@ func (m specificNightlies) Priority() int {
 
 func (m specificNightlies) SelectVersion(versionList *spi.VersionList) (*semver.Version, string, error) {
 	specificNightly := viper.GetString(config.Cluster.InstallSpecificNightly)
-	versionsWithoutDefault := removeDefaultVersion(versionList.AvailableVersions())
-	versionType := "specific nightly"
-
 	if specificNightly == "" {
-		return nil, versionType, fmt.Errorf("no version to match nightly found")
+		return nil, m.String(), fmt.Errorf("no version to match nightly found")
 	}
 
+	versionsWithoutDefault := removeDefaultVersion(versionList.AvailableVersions())
 	common.SortVersions(versionsWithoutDefault)
 
 	versionToMatch := semver.MustParse(specificNightly)
 
 	if versionToMatch == nil {
-		return nil, versionType, fmt.Errorf("error parsing semver version for %s", specificNightly)
+		return nil, m.String(), fmt.Errorf("error parsing semver version for %s", specificNightly)
 	}
 
 	for i := len(versionsWithoutDefault) - 1; i > -1; i-- {
 		if strings.Contains(versionsWithoutDefault[i].Version().Original(), "nightly") && versionsWithoutDefault[i].Version().Major() == versionToMatch.Major() && versionsWithoutDefault[i].Version().Minor() == versionToMatch.Minor() {
 			// Since we're going through a list in reverse-order, the first X.Y that matches should be the latest!
-			return versionsWithoutDefault[i].Version(), versionType, nil
+			return versionsWithoutDefault[i].Version(), m.String(), nil
 		}
 	}
 
-	return nil, versionType, fmt.Errorf("no valid nightly found for version %s", specificNightly)
+	return nil, m.String(), fmt.Errorf("no valid nightly found for version %s", specificNightly)
 }
 
 func (m specificNightlies) String() string {

@@ -25,23 +25,22 @@ func (m latestXYVersion) Priority() int {
 
 func (m latestXYVersion) SelectVersion(versionList *spi.VersionList) (*semver.Version, string, error) {
 	latestXY := viper.GetString(config.Cluster.InstallLatestXY)
-	versionType := "latest X.Y version available"
 	versions := versionList.AvailableVersions()
 
 	semVersion, err := semver.NewVersion(latestXY)
 	if err != nil {
-		return nil, versionType, fmt.Errorf("error parsing semantic version for %s", latestXY)
+		return nil, m.String(), fmt.Errorf("error parsing semantic version for %s", latestXY)
 	}
 
 	for _, version := range versions {
 		if version.Version().Major() == semVersion.Major() && version.Version().Minor() == semVersion.Minor() {
-			return version.Version(), versionType, nil
+			return version.Version(), m.String(), nil
 		}
 	}
 
-	return nil, versionType, fmt.Errorf("unable to locate latest version for %s", latestXY)
+	return nil, m.String(), fmt.Errorf("unable to locate latest version for %s", latestXY)
 }
 
 func (m latestXYVersion) String() string {
-	return "latest XY"
+	return "latest X.Y version available"
 }

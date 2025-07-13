@@ -24,5 +24,8 @@ const (
 	JobID = "JobID"
 
 	// ProvisionShardID is the shard ID that is set to provision a shard for the cluster.
-	ProvisionShardID = "provision_shard_id"
+	ProvisionShardID = "ProvisionShardId"
+
+	// TODO: Perhaps this isn't the best place for it? (It seems the only cluster-related property in this file.)
+	CustomPayload = "ReleaseImage"
 )

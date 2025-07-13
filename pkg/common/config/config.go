@@ -472,6 +472,8 @@ var Cluster = struct {
 	// FedRamp will enable OSDe2e to run in a FedRamp environment
 	// Env: FEDRAMP
 	FedRamp string
+
+	CustomPayload string
 }{
 	MultiAZ:                             "cluster.multiAZ",
 	Channel:                             "cluster.channel",
@@ -511,6 +513,7 @@ var Cluster = struct {
 	InspectNamespaces:                   "cluster.inspectNamespaces",
 	EnableFips:                          "cluster.enableFips",
 	FedRamp:                             "cluster.fedRamp",
+	CustomPayload:                       "cluster.customPayload",
 }
 
 // CloudProvider config keys.
@@ -853,6 +856,9 @@ func InitOSDe2eViper() {
 	viper.SetDefault(Cluster.FedRamp, false)
 	_ = viper.BindEnv(Cluster.FedRamp, "FEDRAMP")
 	RegisterSecret(Cluster.FedRamp, "fedramp")
+
+	viper.SetDefault(Cluster.CustomPayload, "")
+	_ = viper.BindEnv(Cluster.CustomPayload, "CUSTOM_PAYLOAD")
 
 	// ----- Cloud Provider -----
 	viper.SetDefault(CloudProvider.CloudProviderID, "aws")
